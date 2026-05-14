@@ -1,0 +1,135 @@
+version: '3.9'
+
+services:
+  # MongoDB - Database for all services
+  mongo:
+    image: mongo:6.0
+    container_name: rushx-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rushx
+      MONGO_INITDB_ROOT_PASSWORD: rushx123
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - rushx-network
+
+  # Redis - Cache and WebSocket for tracking
+  redis:
+    image: redis:7-alpine
+    container_name: rushx-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - rushx-network
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: rushx-api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      USER_SERVICE_URL: http://user-service:3001
+      ORDER_SERVICE_URL: http://order-service:3002
+      PAYMENT_SERVICE_URL: http://payment-service:3003
+      TRACKING_SERVICE_URL: http://tracking-service:3004
+    depends_on:
+      - user-service
+      - order-service
+      - payment-service
+      - tracking-service
+    networks:
+      - rushx-network
+
+  # User Service
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: rushx-user-service
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      MONGODB_URL: mongodb://rushx:rushx123@mongo:27017/rushx-users?authSource=admin
+      JWT_SECRET: rushx-super-secret-key-change-in-production
+      JWT_EXPIRE: 7d
+    depends_on:
+      - mongo
+    networks:
+      - rushx-network
+
+  # Order Service
+  order-service:
+    build:
+      context: ./services/order-service
+      dockerfile: Dockerfile
+    container_name: rushx-order-service
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      MONGODB_URL: mongodb://rushx:rushx123@mongo:27017/rushx-orders?authSource=admin
+      USER_SERVICE_URL: http://user-service:3001
+      TRACKING_SERVICE_URL: http://tracking-service:3004
+    depends_on:
+      - mongo
+      - user-service
+    networks:
+      - rushx-network
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    container_name: rushx-payment-service
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      MONGODB_URL: mongodb://rushx:rushx123@mongo:27017/rushx-payments?authSource=admin
+      ORDER_SERVICE_URL: http://order-service:3002
+      USER_SERVICE_URL: http://user-service:3001
+    depends_on:
+      - mongo
+    networks:
+      - rushx-network
+
+  # Tracking Service
+  tracking-service:
+    build:
+      context: ./services/tracking-service
+      dockerfile: Dockerfile
+    container_name: rushx-tracking-service
+    ports:
+      - "3004:3004"
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      REDIS_URL: redis://redis:6379
+      MONGODB_URL: mongodb://rushx:rushx123@mongo:27017/rushx-tracking?authSource=admin
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      - rushx-network
+
+volumes:
+  mongo_data:
+  redis_data:
+
+networks:
+  rushx-network:
+    driver: bridge
