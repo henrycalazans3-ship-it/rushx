@@ -1,192 +1,124 @@
-# 🏍️ RushX - Fast Motorcycle Delivery App
+# RUSHX - Plataforma de Entrega Rápida
 
-## Visão Geral
-RushX é um aplicativo de entregas rápidas por moto em Benguela. Conecta clientes que precisam enviar documentos/encomendas com motoqueiros que querem ganhar dinheiro.
+## Descrição do Projeto
 
-**Recursos Principais:**
-- ⚡ Entregas em minutos
-- 🛡️ Segurança com SOS e compartilhamento de rota
-- 💰 Pagamento express e em dinheiro
-- 📍 Rastreamento em tempo real com WebSocket
-- ⭐ Sistema de avaliações
-- 📊 Painel administrativo
+RUSHX é uma plataforma inovadora de entrega rápida que conecta clientes, motoqueiros e comerciantes. A aplicação oferece entregas urgentes, programadas e sob encomenda com rastreamento em tempo real.
 
----
+## Tecnologias Utilizadas
 
-## 🏗️ Arquitetura
+- **Frontend**: React Native / Flutter
+- **Backend**: Node.js + Express
+- **Banco de Dados**: MongoDB / PostgreSQL
+- **Autenticação**: JWT + SMS OTP
+- **Mapas**: Google Maps API
+- **Pagamentos**: Multicaixa Express
+- **Deployment**: Docker + AWS/Azure
+
+## Estrutura do Projeto
 
 ```
 rushx/
-├── api-gateway/                 # Porta 3000 - Orquestrador
-├── services/
-│   ├── user-service/           # Porta 3001 - Autenticação e perfis
-│   ├── order-service/          # Porta 3002 - Pedidos de entrega
-│   ├── payment-service/        # Porta 3003 - Pagamentos
-│   └── tracking-service/       # Porta 3004 - Rastreamento real-time
-├── mobile/                      # React Native / Flutter
-├── admin-dashboard/             # React - Painel admin
-├── docker-compose.yml
-└── docs/
+├── docs/                    # Documentação
+├── backend/                 # API Backend
+├── frontend-mobile/         # Aplicação Mobile
+├── admin-dashboard/         # Painel Administrativo
+├── .github/                 # GitHub Actions/Workflows
+└── README.md
 ```
 
----
+## Funcionalidades Principais
 
-## 🛠️ Stack Tecnológico
+### 1. Autenticação
+- Cadastro de Cliente
+- Cadastro de Motoqueiro
+- Login com SMS OTP
+- Recuperação de Palavra-passe
 
-**Backend:**
-- Node.js + Express.js
-- WebSocket (socket.io)
-- MongoDB
-- JWT para autenticação
-- Docker & Docker Compose
+### 2. Cliente
+- Página inicial com mapa em tempo real
+- Nova entrega (recolha + destino)
+- Cálculo automático de preço
+- Pagamentos (Multicaixa, Dinheiro)
+- Rastreamento em tempo real
+- Histórico de entregas
+- Avaliações
 
-**Mobile:**
-- React Native / Flutter (estrutura pronta)
+### 3. Motoqueiro
+- App móvel dedicada
+- Ficar Online/Offline
+- Aceitar/Recusar pedidos
+- Carteira e ganhos
+- Levantamento de fundos
+- Avaliações e histórico
 
-**Admin:**
-- React.js
+### 4. Administrador
+- Painel de controle
+- Aprovação de motoqueiros
+- Gestão de preços
+- Criar promoções
+- Relatórios e estatísticas
+- Gestão de zonas de cobertura
 
-**Real-time:**
-- Socket.IO para rastreamento de motos
+### 5. Segurança
+- Verificação SMS
+- PIN na entrega
+- Encriptação de dados
+- Detecção de fraude
 
----
+## Como Iniciar
 
-## 🚀 Quick Start
+### Pré-requisitos
+- Node.js v16+
+- npm ou yarn
+- Docker (opcional)
 
-### 1. Clonar repositório
+### Instalação
+
 ```bash
+# Clone o repositório
 git clone https://github.com/henrycalazans3-ship-it/rushx.git
 cd rushx
-```
 
-### 2. Setup com Docker (recomendado)
-```bash
-docker-compose up -d
-```
-
-### 3. Setup Manual (Node.js 18+)
-
-```bash
-# API Gateway
-cd api-gateway
+# Instale as dependências
 npm install
-npm run dev
 
-# Em outro terminal - User Service
-cd ../services/user-service
-npm install
-npm run dev
+# Configure as variáveis de ambiente
+cp .env.example .env
 
-# Em outro terminal - Order Service
-cd ../services/order-service
-npm install
-npm run dev
-
-# Em outro terminal - Payment Service
-cd ../services/payment-service
-npm install
-npm run dev
-
-# Em outro terminal - Tracking Service
-cd ../services/tracking-service
-npm install
+# Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
----
+## Roadmap
 
-## 📝 Endpoints Disponíveis
+- [ ] V1.0 - MVP com funcionalidades core
+- [ ] V1.1 - Funcionalidades Premium
+- [ ] V2.0 - Integração com APIs externas
+- [ ] V2.1 - Analytics avançado
 
-### Auth (User Service)
-- `POST /auth/register` - Criar conta
-- `POST /auth/login` - Login com número
-- `POST /auth/verify-sms` - Verificar SMS
-- `GET /auth/profile` - Perfil do usuário
+## Issues & Tarefas
 
-### Pedidos (Order Service)
-- `POST /orders` - Criar pedido
-- `GET /orders/:id` - Detalhes do pedido
-- `PUT /orders/:id/accept` - Aceitar entrega
-- `GET /orders` - Listar pedidos
+Acompanhe o desenvolvimento através das [Issues](https://github.com/henrycalazans3-ship-it/rushx/issues) do projeto. Temos 24 issues planejadas cobrindo:
 
-### Pagamentos (Payment Service)
-- `POST /payments` - Criar pagamento
-- `GET /payments/:id` - Status do pagamento
-- `POST /payments/withdraw` - Levantar dinheiro
+- 🔐 Autenticação (6 issues)
+- 📱 Frontend & UX (3 issues)
+- 📦 Entregas (3 issues)
+- 🏍️ Motoqueiros (2 issues)
+- 💳 Pagamentos & Carteira (2 issues)
+- ⭐ Avaliações (1 issue)
+- 🔧 Admin (3 issues)
+- 🔔 Notificações & Chat (2 issues)
+- 🔒 Segurança & BD (3 issues)
+- 🚀 DevOps (1 issue)
 
-### Rastreamento (Tracking Service)
-- WebSocket: `ws://localhost:3004`
-- Emits real-time: `biker-location`, `order-status`
+## Contribuição
 
----
+Veja [CONTRIBUTING.md](./docs/CONTRIBUTING.md) para detalhes sobre como contribuir.
 
-## 🔐 Variáveis de Ambiente
+## Licença
 
-Crie `.env` em cada serviço:
+MIT License - veja [LICENSE](./LICENSE) para mais detalhes.
 
-```env
-# Comum
-NODE_ENV=development
-LOG_LEVEL=debug
+## Contato
 
-# User Service
-USER_SERVICE_PORT=3001
-MONGODB_URL=mongodb://mongo:27017/rushx-users
-JWT_SECRET=your-secret-key-here
-
-# Order Service
-ORDER_SERVICE_PORT=3002
-MONGODB_URL=mongodb://mongo:27017/rushx-orders
-API_GATEWAY_URL=http://api-gateway:3000
-
-# Payment Service
-PAYMENT_SERVICE_PORT=3003
-STRIPE_SECRET_KEY=your-stripe-key
-
-# Tracking Service
-TRACKING_SERVICE_PORT=3004
-REDIS_URL=redis://redis:6379
-```
-
----
-
-## 📊 Roadmap MVP
-
-### Fase 1 (Semana 1-2): Auth + Pedido Básico ⭐ PRÓXIMA
-- [x] Setup inicial
-- [ ] Autenticação por SMS
-- [ ] Criar pedido
-- [ ] Aceitar/Recusar entrega
-- [ ] Mapa básico
-
-### Fase 2 (Semana 3-4): Pagamento + Chat
-- [ ] Pagamento express
-- [ ] Pagamento em dinheiro
-- [ ] Chat em tempo real
-- [ ] Avaliações
-
-### Fase 3 (Semana 5+): Admin + Avançado
-- [ ] Painel administrativo
-- [ ] Analytics
-- [ ] Promoções
-- [ ] Ranking de motoqueiros
-
----
-
-## 🔗 Links Úteis
-
-- [Documentação API Completa](./docs/API.md)
-- [Guia de Desenvolvimento](./docs/DEVELOPMENT.md)
-- [Arquitetura Detalhada](./docs/ARCHITECTURE.md)
-
----
-
-## 👨‍💻 Autor
-
-**Henry Calazans** - [GitHub](https://github.com/henrycalazans3-ship-it)
-
----
-
-## 📄 Licença
-
-MIT
+Para questões sobre o projeto, abra uma issue no GitHub.
